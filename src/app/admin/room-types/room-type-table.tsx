@@ -27,7 +27,6 @@ import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { RoomTypeDialog } from "./room-type-dialog"
 import { DeleteRoomTypeDialog } from "./delete-room-type-dialog"
-import { toast } from "@/components/ui/use-toast"
 
 // Type definitions
 interface RoomType {
@@ -37,11 +36,74 @@ interface RoomType {
   price_per_night: number
 }
 
+const dummyRoomTypes: RoomType[] = [
+  {
+    id: 1,
+    name: "Standard Single",
+    description: "Cozy room with a single bed and basic amenities.",
+    price_per_night: 50,
+  },
+  {
+    id: 2,
+    name: "Deluxe Double",
+    description: "Spacious room with a double bed and city view.",
+    price_per_night: 80,
+  },
+  {
+    id: 3,
+    name: "Executive Suite",
+    description: "Luxurious suite with a king bed and private balcony.",
+    price_per_night: 150,
+  },
+  {
+    id: 4,
+    name: "Family Room",
+    description: "Room with two queen beds, ideal for families.",
+    price_per_night: 120,
+  },
+  {
+    id: 5,
+    name: "Budget Twin",
+    description: "Affordable room with two twin beds.",
+    price_per_night: 45,
+  },
+  {
+    id: 6,
+    name: "Penthouse",
+    description: "Top-floor suite with premium amenities and panoramic views.",
+    price_per_night: 250,
+  },
+  {
+    id: 7,
+    name: "Oceanfront Villa",
+    description: "Private villa with direct beach access.",
+    price_per_night: 300,
+  },
+  {
+    id: 8,
+    name: "Standard Queen",
+    description: "Comfortable room with a queen bed and modern decor.",
+    price_per_night: 65,
+  },
+  {
+    id: 9,
+    name: "Junior Suite",
+    description: "Mid-tier suite with a sitting area and king bed.",
+    price_per_night: 110,
+  },
+  {
+    id: 10,
+    name: "Accessible Room",
+    description: "Room designed for accessibility with a double bed.",
+    price_per_night: 60,
+  },
+];
+
 // API functions
 async function fetchRoomTypes() {
   const response = await fetch("/api/room-types")
   if (!response.ok) {
-    throw new Error("Failed to fetch room types")
+    console.log("Failed to fetch room types")
   }
   return response.json()
 }
@@ -55,7 +117,7 @@ async function createRoomType(roomType: Omit<RoomType, "id">) {
     body: JSON.stringify(roomType),
   })
   if (!response.ok) {
-    throw new Error("Failed to create room type")
+    console.log("Failed to create room type")
   }
   return response.json()
 }
@@ -69,7 +131,7 @@ async function updateRoomType(roomType: RoomType) {
     body: JSON.stringify(roomType),
   })
   if (!response.ok) {
-    throw new Error("Failed to update room type")
+    console.log("Failed to update room type")
   }
   return response.json()
 }
@@ -79,7 +141,7 @@ async function deleteRoomType(id: number) {
     method: "DELETE",
   })
   if (!response.ok) {
-    throw new Error("Failed to delete room type")
+    console.log("Failed to delete room type")
   }
   return response.json()
 }
@@ -106,17 +168,17 @@ export function RoomTypeTable() {
     mutationFn: createRoomType,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["roomTypes"] })
-      toast({
-        title: "Room type created",
-        description: "The room type has been created successfully.",
-      })
+      // toast({
+      //   title: "Room type created",
+      //   description: "The room type has been created successfully.",
+      // })
     },
     onError: (error) => {
-      toast({
-        title: "Error",
-        description: `Failed to create room type: ${error.message}`,
-        variant: "destructive",
-      })
+      // toast({
+      //   title: "Error",
+      //   description: `Failed to create room type: ${error.message}`,
+      //   variant: "destructive",
+      // })
     },
   })
 
@@ -124,17 +186,17 @@ export function RoomTypeTable() {
     mutationFn: updateRoomType,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["roomTypes"] })
-      toast({
-        title: "Room type updated",
-        description: "The room type has been updated successfully.",
-      })
+      // toast({
+      //   title: "Room type updated",
+      //   description: "The room type has been updated successfully.",
+      // })
     },
     onError: (error) => {
-      toast({
-        title: "Error",
-        description: `Failed to update room type: ${error.message}`,
-        variant: "destructive",
-      })
+      // toast({
+      //   title: "Error",
+      //   description: `Failed to update room type: ${error.message}`,
+      //   variant: "destructive",
+      // })
     },
   })
 
@@ -142,17 +204,17 @@ export function RoomTypeTable() {
     mutationFn: deleteRoomType,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["roomTypes"] })
-      toast({
-        title: "Room type deleted",
-        description: "The room type has been deleted successfully.",
-      })
+      // toast({
+      //   title: "Room type deleted",
+      //   description: "The room type has been deleted successfully.",
+      // })
     },
     onError: (error) => {
-      toast({
-        title: "Error",
-        description: `Failed to delete room type: ${error.message}`,
-        variant: "destructive",
-      })
+      // toast({
+      //   title: "Error",
+      //   description: `Failed to delete room type: ${error.message}`,
+      //   variant: "destructive",
+      // })
     },
   })
 
@@ -227,7 +289,7 @@ export function RoomTypeTable() {
     },
   ]
 
-  const roomTypes = data?.roomTypes || []
+  const roomTypes = data?.roomTypes || dummyRoomTypes
 
   const table = useReactTable({
     data: roomTypes,

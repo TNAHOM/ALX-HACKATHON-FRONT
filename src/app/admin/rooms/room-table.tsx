@@ -45,13 +45,191 @@ interface Room {
 interface RoomType {
   id: number
   name: string
+  description: string
+  price_per_night: number
 }
+
+const dummyRoomTypes: RoomType[] = [
+  {
+    id: 1,
+    name: "Standard Single",
+    description: "Cozy room with a single bed and basic amenities.",
+    price_per_night: 50,
+  },
+  {
+    id: 2,
+    name: "Deluxe Double",
+    description: "Spacious room with a double bed and city view.",
+    price_per_night: 80,
+  },
+  {
+    id: 3,
+    name: "Executive Suite",
+    description: "Luxurious suite with a king bed and private balcony.",
+    price_per_night: 150,
+  },
+  {
+    id: 4,
+    name: "Family Room",
+    description: "Room with two queen beds, ideal for families.",
+    price_per_night: 120,
+  },
+  {
+    id: 5,
+    name: "Budget Twin",
+    description: "Affordable room with two twin beds.",
+    price_per_night: 45,
+  },
+  {
+    id: 6,
+    name: "Penthouse",
+    description: "Top-floor suite with premium amenities and panoramic views.",
+    price_per_night: 250,
+  },
+  {
+    id: 7,
+    name: "Oceanfront Villa",
+    description: "Private villa with direct beach access.",
+    price_per_night: 300,
+  },
+  {
+    id: 8,
+    name: "Standard Queen",
+    description: "Comfortable room with a queen bed and modern decor.",
+    price_per_night: 65,
+  },
+  {
+    id: 9,
+    name: "Junior Suite",
+    description: "Mid-tier suite with a sitting area and king bed.",
+    price_per_night: 110,
+  },
+  {
+    id: 10,
+    name: "Accessible Room",
+    description: "Room designed for accessibility with a double bed.",
+    price_per_night: 60,
+  },
+];
+
+const dummyRooms: Room[] = [
+  {
+    id: 1,
+    room_number: "101",
+    floor: 1,
+    is_available: true,
+    room_type_id: 1,
+    room_type: {
+      id: 1,
+      name: "Standard Single",
+    },
+  },
+  {
+    id: 2,
+    room_number: "205",
+    floor: 2,
+    is_available: false,
+    room_type_id: 2,
+    room_type: {
+      id: 2,
+      name: "Deluxe Double",
+    },
+  },
+  {
+    id: 3,
+    room_number: "310",
+    floor: 3,
+    is_available: true,
+    room_type_id: 3,
+    room_type: {
+      id: 3,
+      name: "Executive Suite",
+    },
+  },
+  {
+    id: 4,
+    room_number: "112",
+    floor: 1,
+    is_available: true,
+    room_type_id: 4,
+    room_type: {
+      id: 4,
+      name: "Family Room",
+    },
+  },
+  {
+    id: 5,
+    room_number: "408",
+    floor: 4,
+    is_available: false,
+    room_type_id: 5,
+    room_type: {
+      id: 5,
+      name: "Budget Twin",
+    },
+  },
+  {
+    id: 6,
+    room_number: "520",
+    floor: 5,
+    is_available: true,
+    room_type_id: 6,
+    room_type: {
+      id: 6,
+      name: "Penthouse",
+    },
+  },
+  {
+    id: 7,
+    room_number: "V01",
+    floor: 1,
+    is_available: false,
+    room_type_id: 7,
+    room_type: {
+      id: 7,
+      name: "Oceanfront Villa",
+    },
+  },
+  {
+    id: 8,
+    room_number: "306",
+    floor: 3,
+    is_available: true,
+    room_type_id: 8,
+    room_type: {
+      id: 8,
+      name: "Standard Queen",
+    },
+  },
+  {
+    id: 9,
+    room_number: "415",
+    floor: 4,
+    is_available: true,
+    room_type_id: 9,
+    room_type: {
+      id: 9,
+      name: "Junior Suite",
+    },
+  },
+  {
+    id: 10,
+    room_number: "107",
+    floor: 1,
+    is_available: true,
+    room_type_id: 10,
+    room_type: {
+      id: 10,
+      name: "Accessible Room",
+    },
+  },
+];
 
 // API functions
 async function fetchRooms() {
   const response = await fetch("/api/rooms")
   if (!response.ok) {
-    throw new Error("Failed to fetch rooms")
+    console.log("Failed to fetch rooms")
   }
   return response.json()
 }
@@ -65,7 +243,7 @@ async function createRoom(room: Omit<Room, "id" | "room_type">) {
     body: JSON.stringify(room),
   })
   if (!response.ok) {
-    throw new Error("Failed to create room")
+    console.log("Failed to create room")
   }
   return response.json()
 }
@@ -79,7 +257,7 @@ async function updateRoom(room: Omit<Room, "room_type">) {
     body: JSON.stringify(room),
   })
   if (!response.ok) {
-    throw new Error("Failed to update room")
+    console.log("Failed to update room")
   }
   return response.json()
 }
@@ -89,7 +267,7 @@ async function deleteRoom(id: number) {
     method: "DELETE",
   })
   if (!response.ok) {
-    throw new Error("Failed to delete room")
+    console.log("Failed to delete room")
   }
   return response.json()
 }
@@ -106,10 +284,10 @@ export function RoomTable() {
   const queryClient = useQueryClient()
 
   // Fetch rooms and room types
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["rooms"],
-    queryFn: fetchRooms,
-  })
+  // const { data, isLoading, error } = useQuery({
+  //   queryKey: ["rooms"],
+  //   queryFn: fetchRooms,
+  // })
 
   // Mutations
   const createMutation = useMutation({
@@ -245,8 +423,11 @@ export function RoomTable() {
     },
   ]
 
-  const rooms = data?.rooms || []
-  const roomTypes = data?.roomTypes || []
+  
+  const rooms = dummyRooms
+  const roomTypes = dummyRoomTypes
+  // const rooms = data?.rooms || dummyRooms
+  // const roomTypes = data?.roomTypes || []
 
   const table = useReactTable({
     data: rooms,
@@ -303,9 +484,9 @@ export function RoomTable() {
     setIsDeleteDialogOpen(false)
   }
 
-  if (error) {
-    return <div className="text-destructive">Error loading rooms: {(error as Error).message}</div>
-  }
+  // if (error) {
+  //   return <div className="text-destructive">Error loading rooms: {(error as Error).message}</div>
+  // }
 
   return (
     <div className="space-y-4">

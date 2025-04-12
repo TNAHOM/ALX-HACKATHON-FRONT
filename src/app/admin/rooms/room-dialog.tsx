@@ -1,65 +1,96 @@
-"use client"
+"use client";
 
-import { useEffect } from "react"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import * as z from "zod"
+import { useEffect } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
 
 // Type definitions
 interface Room {
-  id: number
-  room_number: string
-  floor: number
-  is_available: boolean
-  room_type_id: number
+  id: number;
+  room_number: string;
+  floor: number;
+  is_available: boolean;
+  room_type_id: number;
   room_type: {
-    id: number
-    name: string
-  }
+    id: number;
+    name: string;
+  };
 }
 
 interface RoomType {
-  id: number
-  name: string
+  id: number;
+  name: string;
 }
 
 const roomSchema = z.object({
   room_number: z.string().min(1, "Room number is required"),
   floor: z.coerce.number().min(0, "Floor must be 0 or higher"),
-  is_available: z.boolean().default(true),
+  is_available: z.boolean({ required_error: "Availability is required" }).default(true),
   room_type_id: z.coerce.number({
     required_error: "Room type is required",
     invalid_type_error: "Room type is required",
   }),
-})
+});
 
-type RoomFormValues = z.infer<typeof roomSchema>
+type RoomFormValues = {
+  room_number: string;
+  floor: number;
+  is_available: boolean;
+  room_type_id: number;
+};
 
 interface RoomDialogProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  room: Room | null
-  roomTypes: RoomType[]
-  onSave: (data: RoomFormValues) => void
-  isSubmitting: boolean
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  room: Room | null;
+  roomTypes: RoomType[];
+  onSave: (data: RoomFormValues) => void;
+  isSubmitting: boolean;
 }
 
-export function RoomDialog({ open, onOpenChange, room, roomTypes, onSave, isSubmitting }: RoomDialogProps) {
+export function RoomDialog({
+  open,
+  onOpenChange,
+  room,
+  roomTypes,
+  onSave,
+  isSubmitting,
+}: RoomDialogProps) {
   const form = useForm<RoomFormValues>({
-    resolver: zodResolver(roomSchema),
     defaultValues: {
       room_number: "",
       floor: 1,
       is_available: true,
       room_type_id: undefined,
     },
-  })
+  });
 
   // Reset form when room changes
   useEffect(() => {
@@ -70,21 +101,21 @@ export function RoomDialog({ open, onOpenChange, room, roomTypes, onSave, isSubm
           floor: room.floor,
           is_available: room.is_available,
           room_type_id: room.room_type_id,
-        })
+        });
       } else {
         form.reset({
           room_number: "",
           floor: 1,
           is_available: true,
           room_type_id: roomTypes[0]?.id,
-        })
+        });
       }
     }
-  }, [room, form, open, roomTypes])
+  }, [room, form, open, roomTypes]);
 
   const onSubmit = (data: RoomFormValues) => {
-    onSave(data)
-  }
+    onSave(data);
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -94,7 +125,10 @@ export function RoomDialog({ open, onOpenChange, room, roomTypes, onSave, isSubm
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
+          <form
+            onSubmit={form.handleSubmit(() => onSubmit)}
+            className="space-y-4 py-4"
+          >
             <FormField
               control={form.control}
               name="room_number"
@@ -104,7 +138,9 @@ export function RoomDialog({ open, onOpenChange, room, roomTypes, onSave, isSubm
                   <FormControl>
                     <Input placeholder="101" {...field} />
                   </FormControl>
-                  <FormDescription>Unique identifier for the room</FormDescription>
+                  <FormDescription>
+                    Unique identifier for the room
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -131,7 +167,9 @@ export function RoomDialog({ open, onOpenChange, room, roomTypes, onSave, isSubm
                 <FormItem>
                   <FormLabel>Room Type</FormLabel>
                   <Select
-                    onValueChange={(value) => field.onChange(Number.parseInt(value))}
+                    onValueChange={(value) =>
+                      field.onChange(Number.parseInt(value))
+                    }
                     defaultValue={field.value?.toString()}
                     value={field.value?.toString()}
                   >
@@ -159,11 +197,16 @@ export function RoomDialog({ open, onOpenChange, room, roomTypes, onSave, isSubm
               render={({ field }) => (
                 <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
                   <FormControl>
-                    <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
                   </FormControl>
                   <div className="space-y-1 leading-none">
                     <FormLabel>Available</FormLabel>
-                    <FormDescription>Is this room currently available for booking?</FormDescription>
+                    <FormDescription>
+                      Is this room currently available for booking?
+                    </FormDescription>
                   </div>
                 </FormItem>
               )}
@@ -178,5 +221,5 @@ export function RoomDialog({ open, onOpenChange, room, roomTypes, onSave, isSubm
         </Form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
