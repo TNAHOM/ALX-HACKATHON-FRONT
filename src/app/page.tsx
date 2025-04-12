@@ -182,6 +182,7 @@ export default function Home() {
           onClose={handleCloseChat}
           onSend={(message) => {
             setChatInput(message);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             handleChatSubmit(new Event("submit") as any, message);
           }}
         />
