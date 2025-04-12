@@ -50,6 +50,7 @@ export async function signup(formData: FormData) {
 
     // Create a profile for the user
     const role = 'admin'; // Set the desired role here
+    console.log('User data:', userData); // Log the user data for debugging
     const { error: UserError } = await supabase
         .from('User') // Replace with your actual table name
         .insert([{ id: userData.user?.id, email: userData.user?.email, role: role, name: data.name }]); // Assuming 'id' is the foreign key linking to auth.users

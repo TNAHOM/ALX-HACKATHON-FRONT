@@ -14,7 +14,7 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { signup } from "@/app/(auth)/login/action";
+import { login } from "@/app/(auth)/login/action";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
@@ -88,7 +88,7 @@ const LoginForm = () => {
           {/* <Button type="submit" className="w-full">
             Sign Up
           </Button> */}
-          <Button formAction={signup}>Sign Up</Button>
+          <Button formAction={login}>Sign Up</Button>
           {/* Link to Login page */}
           <div className="text-center">
             <p className="text-sm">

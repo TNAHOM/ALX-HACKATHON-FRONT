@@ -66,13 +66,13 @@ export default function Home() {
       <section className="relative">
         <div className="h-[60vh] w-full relative">
           <Image
-            src="/placeholder.svg?height=800&width=1600"
+            src="/hero-img.jpg"
             alt="Resort view"
             fill
             className="object-cover"
             priority
           />
-          <div className="absolute inset-0 bg-black bg-opacity-30 flex flex-col items-center justify-center px-4">
+          <div className="absolute inset-0 bg-opacity-30 flex flex-col items-center justify-center px-4">
             <h1 className="text-4xl md:text-5xl text-white font-bold mb-6 text-center">
               Experience Luxury at Kuriftu Resort
             </h1>
