@@ -158,10 +158,10 @@ export function RoomTypeTable() {
   const queryClient = useQueryClient()
 
   // Fetch room types
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["roomTypes"],
-    queryFn: fetchRoomTypes,
-  })
+  // const { data, isLoading, error } = useQuery({
+  //   queryKey: ["roomTypes"],
+  //   queryFn: fetchRoomTypes,
+  // })
 
   // Mutations
   const createMutation = useMutation({
@@ -289,7 +289,8 @@ export function RoomTypeTable() {
     },
   ]
 
-  const roomTypes = data?.roomTypes || dummyRoomTypes
+  // const roomTypes = data?.roomTypes || dummyRoomTypes
+  const roomTypes = dummyRoomTypes
 
   const table = useReactTable({
     data: roomTypes,
@@ -346,9 +347,9 @@ export function RoomTypeTable() {
     setIsDeleteDialogOpen(false)
   }
 
-  if (error) {
-    return <div className="text-destructive">Error loading room types: {(error as Error).message}</div>
-  }
+  // if (error) {
+  //   return <div className="text-destructive">Error loading room types: {(error as Error).message}</div>
+  // }
 
   return (
     <div className="space-y-4">
